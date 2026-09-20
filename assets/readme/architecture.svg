@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="100%" height="100%">
+  <title>Avalon Digital Ecosystem Architecture Diagram</title>
+  <desc>System architecture diagram illustrating the flow between Telegram Channel, grammY Bot, Bun Backend, Gemini AI, and React 19 Frontend</desc>
+
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="diagBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090A0E" />
+      <stop offset="100%" stop-color="#11141C" />
+    </linearGradient>
+
+    <!-- Node Gradient -->
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161B26" />
+      <stop offset="100%" stop-color="#11141C" />
+    </linearGradient>
+
+    <!-- Arrow Marker -->
+    <marker id="arrowGold" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D8BA7A" />
+    </marker>
+    <marker id="arrowWhite" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#A3A8B5" />
+    </marker>
+  </defs>
+
+  <!-- Canvas Container -->
+  <rect width="1200" height="520" rx="24" fill="url(#diagBg)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+
+  <!-- Section Header -->
+  <g transform="translate(60, 45)">
+    <rect width="240" height="28" rx="14" fill="#161B26" stroke="rgba(216,186,122,0.3)" stroke-width="1" />
+    <text x="120" y="18" text-anchor="middle" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="600" letter-spacing="1.5">
+      SYSTEM ARCHITECTURE
+    </text>
+    <text x="0" y="58" fill="#F8F6F0" font-family="'Cormorant Garamond', Georgia, serif" font-size="28" font-weight="400">
+      End-to-End Content Flow &amp; Automation
+    </text>
+  </g>
+
+  <!-- Columns Layout:
+       Col 1 (x: 60): Telegram Layer (@dusha_avalon & @dusha_avalon_bot)
+       Col 2 (x: 430): Core Application Layer (Bun, grammY, Atomic Store, Gemini AI)
+       Col 3 (x: 820): Production Delivery Layer (Nginx, React 19 Frontend, Leads)
+  -->
+
+  <!-- ==================== COLUMN 1: TELEGRAM INPUTS ==================== -->
+  <!-- Box 1A: Public Channel -->
+  <g transform="translate(60, 130)">
+    <rect width="300" height="150" rx="18" fill="url(#nodeGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+    <circle cx="28" cy="30" r="10" fill="#222838" stroke="rgba(216,186,122,0.4)" stroke-width="1" />
+    <text x="28" y="34" text-anchor="middle" fill="#D8BA7A" font-size="11">📢</text>
+    <text x="50" y="35" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="600">
+      Telegram Channel
+    </text>
+    <text x="50" y="52" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+      @dusha_avalon (ID -1002188408014)
+    </text>
+    <line x1="20" y1="70" x2="280" y2="70" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+    <text x="20" y="94" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Tournament photos &amp; videos
+    </text>
+    <text x="20" y="116" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Real-time channel_post events
+    </text>
+    <text x="20" y="136" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+      Zero-friction coach workflow
+    </text>
+  </g>
+
+  <!-- Box 1B: Admin Bot CMS -->
+  <g transform="translate(60, 310)">
+    <rect width="300" height="160" rx="18" fill="url(#nodeGrad)" stroke="rgba(216, 186, 122, 0.3)" stroke-width="1" />
+    <circle cx="28" cy="30" r="10" fill="#222838" stroke="rgba(216,186,122,0.4)" stroke-width="1" />
+    <text x="28" y="34" text-anchor="middle" fill="#D8BA7A" font-size="11">🤖</text>
+    <text x="50" y="35" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="600">
+      Telegram Bot CMS
+    </text>
+    <text x="50" y="52" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+      @dusha_avalon_bot (Admin Interface)
+    </text>
+    <line x1="20" y1="70" x2="280" y2="70" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+    <text x="20" y="94" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Coaches &amp; Bio editor
+    </text>
+    <text x="20" y="114" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • 7-day schedule grid editor
+    </text>
+    <text x="20" y="134" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Live hall status pill switcher
+    </text>
+    <text x="20" y="152" fill="#EBD8B0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+      Instant /auth whitelist access
+    </text>
+  </g>
+
+  <!-- ==================== COLUMN 2: BUN BACKEND & AI ==================== -->
+  <g transform="translate(420, 130)">
+    <!-- Main Backend Box -->
+    <rect width="340" height="340" rx="20" fill="#11141C" stroke="rgba(216, 186, 122, 0.35)" stroke-width="1" />
+    <rect x="10" y="10" width="320" height="320" rx="14" fill="#161B26" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+
+    <!-- Backend Header -->
+    <text x="26" y="42" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="16" font-weight="700">
+      Bun Core Server &amp; grammY
+    </text>
+    <text x="26" y="62" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+      Runtime: Bun • Port 3018 • systemd service
+    </text>
+
+    <!-- Sub-module 1: Ingestion & Downloader -->
+    <g transform="translate(26, 80)">
+      <rect width="288" height="56" rx="10" fill="#090A0E" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+      <text x="14" y="24" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600">
+        Media Ingestion Engine
+      </text>
+      <text x="14" y="44" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+        Fetches original photos → saves to /uploads
+      </text>
+    </g>
+
+    <!-- Sub-module 2: AI Service -->
+    <g transform="translate(26, 150)">
+      <rect width="288" height="66" rx="10" fill="#090A0E" stroke="rgba(216,186,122,0.3)" stroke-width="1" />
+      <text x="14" y="24" fill="#EBD8B0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600">
+        Gemini 2.5 Flash Copilot
+      </text>
+      <text x="14" y="44" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+        aiService.ts • Anti-slop prompt calibration
+      </text>
+      <text x="14" y="58" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10">
+        Local proxy: http://127.0.0.1:8045/v1
+      </text>
+    </g>
+
+    <!-- Sub-module 3: Atomic Storage -->
+    <g transform="translate(26, 230)">
+      <rect width="288" height="66" rx="10" fill="#090A0E" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+      <text x="14" y="24" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600">
+        Atomic JSON Store
+      </text>
+      <text x="14" y="44" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+        contentStore.ts • safeWrite (.tmp → rename)
+      </text>
+      <text x="14" y="58" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10">
+        Zero DB maintenance, 100% crash resilient
+      </text>
+    </g>
+  </g>
+
+  <!-- ==================== COLUMN 3: WEB & USER EXPERIENCE ==================== -->
+  <!-- Box 3A: Nginx & React 19 Frontend -->
+  <g transform="translate(820, 130)">
+    <rect width="320" height="190" rx="18" fill="url(#nodeGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+    <circle cx="28" cy="30" r="10" fill="#222838" stroke="rgba(216,186,122,0.4)" stroke-width="1" />
+    <text x="28" y="34" text-anchor="middle" fill="#D8BA7A" font-size="11">🌐</text>
+    <text x="50" y="35" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="600">
+      React 19 Website
+    </text>
+    <text x="50" y="52" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">
+      https://avalon.tonivecher.online
+    </text>
+    <line x1="20" y1="70" x2="300" y2="70" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+    <text x="20" y="94" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Editorial Estate Luxury (Tailwind v4)
+    </text>
+    <text x="20" y="114" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Floating glass navigation island
+    </text>
+    <text x="20" y="134" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Dynamic SWR hook (15s polling)
+    </text>
+    <text x="20" y="154" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Double-bezel photo &amp; coach frames
+    </text>
+    <text x="20" y="174" fill="#EBD8B0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+      100% Anti-AI-Slop visual purity
+    </text>
+  </g>
+
+  <!-- Box 3B: Instant Lead Capture -->
+  <g transform="translate(820, 345)">
+    <rect width="320" height="125" rx="18" fill="url(#nodeGrad)" stroke="rgba(216,186,122,0.3)" stroke-width="1" />
+    <circle cx="28" cy="28" r="10" fill="#222838" stroke="rgba(216,186,122,0.4)" stroke-width="1" />
+    <text x="28" y="32" text-anchor="middle" fill="#D8BA7A" font-size="11">⚡</text>
+    <text x="50" y="32" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" font-weight="600">
+      Instant Lead Dispatcher
+    </text>
+    <line x1="20" y1="52" x2="300" y2="52" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+    <text x="20" y="74" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • POST /api/leads from web booking card
+    </text>
+    <text x="20" y="94" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12">
+      • Instant push to Anna Turchina &amp; coaches
+    </text>
+    <text x="20" y="112" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+      Zero lost clients • Sub-second notification
+    </text>
+  </g>
+
+  <!-- ==================== FLOW CONNECTOR ARROWS ==================== -->
+  <!-- Channel to Bun Backend -->
+  <path d="M 360 205 L 420 205" stroke="#D8BA7A" stroke-width="2" marker-end="url(#arrowGold)" />
+  
+  <!-- Bot CMS to Bun Backend -->
+  <path d="M 360 390 L 390 390 L 390 280 L 420 280" stroke="#D8BA7A" stroke-width="2" marker-end="url(#arrowGold)" fill="none" />
+
+  <!-- Bun Backend to Frontend (REST API) -->
+  <path d="M 760 220 L 820 220" stroke="#D8BA7A" stroke-width="2" marker-end="url(#arrowGold)" />
+
+  <!-- Frontend to Lead Dispatcher (Lead Form Submission) -->
+  <path d="M 980 320 L 980 345" stroke="#A3A8B5" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrowWhite)" />
+
+  <!-- Lead Dispatcher Back to Telegram Admins -->
+  <path d="M 820 410 L 790 410 L 790 450 L 360 450" stroke="#D8BA7A" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrowGold)" fill="none" />
+</svg>

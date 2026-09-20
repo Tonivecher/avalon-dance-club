@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" height="100%">
+  <title>Avalon Dance Club &amp; Telegram CMS Hero Banner</title>
+  <desc>Full-stack Ballroom Dance Platform with Zero AI-Slop Luxury Design and Real-time Telegram Channel Sync</desc>
+  
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090A0E" />
+      <stop offset="50%" stop-color="#11141C" />
+      <stop offset="100%" stop-color="#090A0E" />
+    </linearGradient>
+
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D8BA7A" />
+      <stop offset="50%" stop-color="#EBD8B0" />
+      <stop offset="100%" stop-color="#C2A260" />
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161B26" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#11141C" stop-opacity="0.95" />
+    </linearGradient>
+
+    <!-- Subtle Glow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="30" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1200" height="480" rx="24" fill="url(#bgGrad)" />
+  <rect width="1198" height="478" x="1" y="1" rx="23" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+
+  <!-- Ambient Light Accents -->
+  <circle cx="200" cy="100" r="180" fill="#D8BA7A" opacity="0.04" filter="url(#goldGlow)" />
+  <circle cx="1000" cy="380" r="220" fill="#D8BA7A" opacity="0.03" filter="url(#goldGlow)" />
+
+  <!-- Grid Accents -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="80" y1="0" x2="80" y2="480" />
+    <line x1="1120" y1="0" x2="1120" y2="480" />
+    <line x1="0" y1="80" x2="1200" y2="80" />
+    <line x1="0" y1="400" x2="1200" y2="400" />
+  </g>
+
+  <!-- Top Status Pill -->
+  <g transform="translate(80, 50)">
+    <rect width="440" height="34" rx="17" fill="#161B26" stroke="rgba(216, 186, 122, 0.35)" stroke-width="1" />
+    <circle cx="22" cy="17" r="4" fill="#D8BA7A" />
+    <text x="36" y="22" fill="#EBD8B0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600" letter-spacing="2">
+      TSK AVALON • SVIBLOVO MANOR • MOSCOW
+    </text>
+  </g>
+
+  <!-- Top Right Badges -->
+  <g transform="translate(860, 50)">
+    <rect width="130" height="34" rx="17" fill="#161B26" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+    <text x="65" y="22" text-anchor="middle" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600" letter-spacing="1.5">
+      REACT 19
+    </text>
+
+    <rect x="140" width="120" height="34" rx="17" fill="#161B26" stroke="rgba(216, 186, 122, 0.3)" stroke-width="1" />
+    <text x="200" y="22" text-anchor="middle" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="600" letter-spacing="1.5">
+      BUN CORE
+    </text>
+  </g>
+
+  <!-- Main Headline (Left Column) -->
+  <g transform="translate(80, 140)">
+    <text x="0" y="44" fill="#F8F6F0" font-family="'Cormorant Garamond', Georgia, serif" font-size="52" font-weight="400" letter-spacing="1">
+      Ballroom Dance Platform
+    </text>
+    <text x="0" y="104" fill="url(#goldGrad)" font-family="'Cormorant Garamond', Georgia, serif" font-size="52" font-style="italic" font-weight="300" letter-spacing="1">
+      in Historical Estate Luxury
+    </text>
+
+    <text x="0" y="152" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="16" font-weight="400" line-height="24">
+      Zero AI-Slop Editorial Design • Real-time Telegram Sync • Gemini Copilot
+    </text>
+
+    <!-- Key Metrics Pills -->
+    <g transform="translate(0, 190)">
+      <!-- Metric 1 -->
+      <g>
+        <rect width="180" height="60" rx="16" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+        <text x="20" y="32" fill="#D8BA7A" font-family="'Cormorant Garamond', Georgia, serif" font-size="24" font-weight="600">1713 AD</text>
+        <text x="20" y="48" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10" font-weight="600" letter-spacing="1">ESTATE PROVENANCE</text>
+      </g>
+      <!-- Metric 2 -->
+      <g transform="translate(195, 0)">
+        <rect width="180" height="60" rx="16" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+        <text x="20" y="32" fill="#F8F6F0" font-family="'Cormorant Garamond', Georgia, serif" font-size="24" font-weight="600">0 ms</text>
+        <text x="20" y="48" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10" font-weight="600" letter-spacing="1">CHANNEL SYNC LATENCY</text>
+      </g>
+      <!-- Metric 3 -->
+      <g transform="translate(390, 0)">
+        <rect width="180" height="60" rx="16" fill="url(#cardGrad)" stroke="rgba(216,186,122,0.3)" stroke-width="1" />
+        <text x="20" y="32" fill="#D8BA7A" font-family="'Cormorant Garamond', Georgia, serif" font-size="24" font-weight="600">100%</text>
+        <text x="20" y="48" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10" font-weight="600" letter-spacing="1">ANTI-AI-SLOP PURITY</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right Architecture Showcase Card (Double-Bezel) -->
+  <g transform="translate(710, 125)">
+    <!-- Outer Bezel -->
+    <rect width="410" height="290" rx="20" fill="#11141C" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+    <!-- Inner Core -->
+    <rect x="12" y="12" width="386" height="266" rx="14" fill="#161B26" stroke="rgba(216,186,122,0.25)" stroke-width="1" />
+
+    <!-- Terminal/Console Header -->
+    <circle cx="34" cy="34" r="5" fill="#EBD8B0" opacity="0.4" />
+    <circle cx="48" cy="34" r="5" fill="#EBD8B0" opacity="0.2" />
+    <circle cx="62" cy="34" r="5" fill="#EBD8B0" opacity="0.2" />
+    <text x="360" y="38" text-anchor="end" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500" letter-spacing="1">
+      PRODUCTION CLUSTER
+    </text>
+
+    <!-- Node 1: Telegram Channel -->
+    <g transform="translate(28, 60)">
+      <rect width="354" height="46" rx="10" fill="#090A0E" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+      <text x="16" y="28" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" font-weight="600">
+        @dusha_avalon
+      </text>
+      <text x="338" y="28" text-anchor="end" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+        channel_post event →
+      </text>
+    </g>
+
+    <!-- Node 2: Bun / grammY Core -->
+    <g transform="translate(28, 120)">
+      <rect width="354" height="66" rx="10" fill="#090A0E" stroke="rgba(216,186,122,0.3)" stroke-width="1" />
+      <text x="16" y="26" fill="#D8BA7A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" font-weight="600">
+        Bun Core Server &amp; Telegram Bot CMS
+      </text>
+      <text x="16" y="48" fill="#A3A8B5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="400">
+        Port 3018 • Atomic Store • Gemini Flash Copilot
+      </text>
+    </g>
+
+    <!-- Node 3: React 19 Frontend -->
+    <g transform="translate(28, 200)">
+      <rect width="354" height="46" rx="10" fill="#090A0E" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+      <text x="16" y="28" fill="#F8F6F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" font-weight="600">
+        avalon.tonivecher.online
+      </text>
+      <text x="338" y="28" text-anchor="end" fill="#EBD8B0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="500">
+        Live SWR Polish
+      </text>
+    </g>
+  </g>
+
+  <!-- Bottom Accent Line -->
+  <line x1="80" y1="440" x2="1120" y2="440" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+</svg>

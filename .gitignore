@@ -1,0 +1,34 @@
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Node / Bun
+node_modules/
+dist/
+.output/
+.temp/
+*.log
+
+# Scraper & Temporary Extraction Dumps
+*.txt
+older_scraped_media.json
+scraped_media.json
+downloaded_photos.json
+club_photos_catalog.json
+detect_faces.swift
+scratch/
+
+# Local CMS data (production data lives on server)
+server/data/*.json
+!server/data/*.example.json
+server/data/*.tmp*
+server/uploads/
+server/*.bak*
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.cursor/
+.idea/
+.vscode/

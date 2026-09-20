@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  --color-obsidian: #090A0E;
+  --color-surface: #11141C;
+  --color-surface-card: #161B26;
+  --color-surface-elevated: #1C2331;
+  --color-champagne: #D8BA7A;
+  --color-champagne-light: #EBD8B0;
+  --color-champagne-dark: #BFA05E;
+  --color-alabaster: #F8F6F0;
+  --color-graphite: #A3A8B5;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-gold: rgba(216, 186, 122, 0.25);
+}
+
+/* Custom base styles */
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #090A0E;
+  color: #F8F6F0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Double-bezel hardware styling for luxury cards */
+.double-bezel {
+  position: relative;
+  background: #11141C;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.double-bezel-gold {
+  position: relative;
+  background: #161B26;
+  border: 1px solid rgba(216, 186, 122, 0.25);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(216, 186, 122, 0.2);
+}
+
+/* Custom nocturnal scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #090A0E;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F2636;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D8BA7A;
+}
