@@ -35,7 +35,7 @@
 ## 🏗 Архитектура системы
 
 <p align="center">
-  <img src="./assets/readme/architecture.svg" width="100%" alt="Архитектурная схема экосистемы ТСК Авалон">
+  <img src="./assets/readme/architecture.gif" width="100%" alt="Архитектурная схема экосистемы ТСК Авалон">
 </p>
 
 ### Ключевые архитектурные решения:
