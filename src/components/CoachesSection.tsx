@@ -39,9 +39,12 @@ export const CoachesSection: React.FC<CoachesSectionProps> = ({ onOpenForm, coac
                 {/* Photo with face-safe portrait aspect ratio and top alignment */}
                 <div className="relative rounded-2xl overflow-hidden mb-6 aspect-[4/5] bg-[#11141C] border border-white/[0.06]">
                   <img
-                    src={coach.photo}
+                    src={coach.photo || '/images/club/channel_avatar.jpg'}
                     alt={coach.name}
                     className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-700 filter brightness-95 group-hover:brightness-100"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/images/club/channel_avatar.jpg';
+                    }}
                   />
                   <div className="absolute top-3.5 left-3.5">
                     <span className="px-3.5 py-1 rounded-full text-[10px] font-sans font-medium tracking-wider uppercase bg-[#090A0E]/90 text-[#D8BA7A] border border-[#D8BA7A]/30 backdrop-blur-md">
@@ -57,7 +60,9 @@ export const CoachesSection: React.FC<CoachesSectionProps> = ({ onOpenForm, coac
                   {coach.name}
                 </h3>
                 <p className="mt-3 text-xs sm:text-sm text-[#A3A8B5] leading-relaxed">
-                  {coach.desc}
+                  {coach.desc && !['___', '-', '--', '—', '...'].includes(coach.desc.trim())
+                    ? coach.desc
+                    : 'Преподаватель ТСК «Авалон». Подробное резюме и расписание занятий уточняйте у администратора клуба.'}
                 </p>
               </div>
 

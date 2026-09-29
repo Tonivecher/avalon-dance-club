@@ -110,6 +110,55 @@ const CHANNEL_USERNAME = process.env.TELEGRAM_CHANNEL_USERNAME || 'dusha_avalon'
 
 const bot = new Bot(token);
 
+// ============ Process Safety & Unhandled Rejection Guard ============
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Process Unhandled Rejection]:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[Process Uncaught Exception]:', err);
+});
+
+// ============ API Transformer: Safe Markdown & Fault-Tolerant Delivery ============
+bot.api.config.use(async (prev, method, payload: any, signal) => {
+  try {
+    return await prev(method, payload, signal);
+  } catch (err: any) {
+    const isParseError =
+      err?.error_code === 400 &&
+      typeof err?.description === 'string' &&
+      (err.description.includes("can't parse entities") ||
+       err.description.includes('entity starting at byte offset') ||
+       err.description.includes('CHARACTER_'));
+
+    if (isParseError && payload && typeof payload === 'object' && payload.parse_mode) {
+      console.warn(`[Grammy Transformer] Telegram parse error on ${method}: "${err.description}". Retrying as plain text without parse_mode...`);
+      const fallbackPayload = { ...payload };
+      delete fallbackPayload.parse_mode;
+      return await prev(method, fallbackPayload, signal);
+    }
+    throw err;
+  }
+});
+
+// Global error boundary for grammY middleware
+bot.catch((err) => {
+  console.error('[Grammy Bot Catch] Unhandled bot error:', err);
+});
+
+// ============ Helpers: Markdown Escaping & Text Sanitization ============
+function escapeMarkdown(text: string | undefined | null): string {
+  if (!text) return '';
+  return String(text).replace(/([_*`\[])/g, '\\$1');
+}
+
+function sanitizeCoachDesc(desc?: string | null): string {
+  if (!desc) return 'Преподаватель спортивного бального танца ТСК «Авалон». Подробное резюме и расписание занятий уточняйте у администратора.';
+  const trimmed = String(desc).trim();
+  if (!trimmed || ['___', '-', '--', '—', '...', 'нет', 'none'].includes(trimmed.toLowerCase())) {
+    return 'Преподаватель спортивного бального танца ТСК «Авалон». Подробное резюме и расписание занятий уточняйте у администратора.';
+  }
+  return trimmed;
+}
 
 // Ensure upload directories exist
 const rootUploadsDir = path.resolve(import.meta.dir, '..', 'public', 'uploads');
@@ -523,11 +572,13 @@ async function sendCoachCard(ctx: any, coach: Coach, customKb?: InlineKeyboard) 
     .text('✏️ Редактировать', `coach_edit_${coach.id}`)
     .text('🗑️ Удалить', `coach_del_${coach.id}`);
 
+  const descText = sanitizeCoachDesc(coach.desc);
+
   const caption =
-    `👤 *${coach.name}*\n` +
-    `🎗️ ${coach.badge} | ${coach.role}\n\n` +
-    `📝 ${coach.desc}\n\n` +
-    `🏷️ *Направления:* ${coach.specs.join(', ')}`;
+    `👤 *${escapeMarkdown(coach.name)}*\n` +
+    `🎗️ ${escapeMarkdown(coach.badge)} | ${escapeMarkdown(coach.role)}\n\n` +
+    `📝 ${escapeMarkdown(descText)}\n\n` +
+    `🏷️ *Направления:* ${escapeMarkdown(coach.specs.join(', '))}`;
 
   const photoSource = resolvePhotoSource(coach.photo);
   try {
@@ -538,10 +589,18 @@ async function sendCoachCard(ctx: any, coach: Coach, customKb?: InlineKeyboard) 
     });
   } catch (err) {
     console.error(`Failed to send coach photo for ${coach.name}:`, err);
-    await ctx.reply(caption, {
-      parse_mode: 'Markdown',
-      reply_markup: kb
-    });
+    try {
+      await ctx.reply(caption, {
+        parse_mode: 'Markdown',
+        reply_markup: kb
+      });
+    } catch (errReply) {
+      console.error(`Failed to send coach text fallback for ${coach.name}:`, errReply);
+      await ctx.reply(
+        `👤 ${coach.name}\n🎗️ ${coach.badge} | ${coach.role}\n\n📝 ${descText}\n\n🏷️ Направления: ${coach.specs.join(', ')}`,
+        { reply_markup: kb }
+      );
+    }
   }
 }
 
@@ -564,7 +623,11 @@ bot.callbackQuery('coach_list', async (ctx) => {
   });
 
   for (const coach of coaches) {
-    await sendCoachCard(ctx, coach);
+    try {
+      await sendCoachCard(ctx, coach);
+    } catch (err) {
+      console.error(`Error sending card for coach ${coach.id} (${coach.name}):`, err);
+    }
   }
 
   const bottomKb = new InlineKeyboard()
@@ -629,11 +692,12 @@ bot.callbackQuery(/^coach_ed_(.+)_(photo|name|role|badge|desc|specs)$/, async (c
       .text('❌ Отмена', `coach_edit_${coach.id}`)
       .text('🎛️ Главное меню', 'back_main');
 
+    const currentDesc = sanitizeCoachDesc(coach.desc);
     await ctx.reply(
       `📝 *Редактирование описания наставника*\n` +
-      `👤 *${coach.name}* (${coach.role})\n\n` +
+      `👤 *${escapeMarkdown(coach.name)}* (${escapeMarkdown(coach.role)})\n\n` +
       `Текущее описание на сайте:\n` +
-      `_${coach.desc || 'Не заполнено'}_\n\n` +
+      `_${escapeMarkdown(currentDesc)}_\n\n` +
       `_Вы можете отправить новый текст сообщением в чат или воспользоваться AI-генератором Gemini:_`,
       { parse_mode: 'Markdown', reply_markup: aiKb }
     );
@@ -643,12 +707,12 @@ bot.callbackQuery(/^coach_ed_(.+)_(photo|name|role|badge|desc|specs)$/, async (c
   const cancelKb = getCancelKeyboard(`coach_edit_${coach.id}`);
 
   const prompts: Record<string, string> = {
-    photo: `📸 Отправьте *новое фото* для преподавателя *${coach.name}* в чат (вертикальный портрет):\n_Поддерживаются обычные фото и файлы без сжатия._`,
-    name: `👤 Текущее ФИО: *${coach.name}*\n\nВведите новое имя и фамилию:`,
-    role: `🎓 Текущая роль: *${coach.role}*\n\nВведите новую должность/роль:`,
-    badge: `🎗️ Текущий бейдж: *${coach.badge}*\n\nВведите новый бейдж (регалии):`,
-    desc: `📝 Текущее описание:\n_${coach.desc}_\n\nВведите новое подробное описание:`,
-    specs: `🏷️ Текущие направления:\n*${coach.specs.join(', ')}*\n\nВведите новые направления через запятую:`
+    photo: `📸 Отправьте *новое фото* для преподавателя *${escapeMarkdown(coach.name)}* в чат (вертикальный портрет):\n_Поддерживаются обычные фото и файлы без сжатия._`,
+    name: `👤 Текущее ФИО: *${escapeMarkdown(coach.name)}*\n\nВведите новое имя и фамилию:`,
+    role: `🎓 Текущая роль: *${escapeMarkdown(coach.role)}*\n\nВведите новую должность/роль:`,
+    badge: `🎗️ Текущий бейдж: *${escapeMarkdown(coach.badge)}*\n\nВведите новый бейдж (регалии):`,
+    desc: `📝 Текущее описание:\n_${escapeMarkdown(sanitizeCoachDesc(coach.desc))}_\n\nВведите новое подробное описание:`,
+    specs: `🏷️ Текущие направления:\n*${escapeMarkdown(coach.specs.join(', ')) }*\n\nВведите новые направления через запятую:`
   };
 
   await ctx.reply(prompts[field], { parse_mode: 'Markdown', reply_markup: cancelKb });
@@ -705,7 +769,8 @@ bot.callbackQuery(/^coach_ai_imp_(.+)$/, async (ctx) => {
 
   const waitMsg = await ctx.reply('⏳ *Gemini улучшает стиль описания...*', { parse_mode: 'Markdown' });
   try {
-    const improved = await improveCoachBio(coach.desc || coach.role, coach.name);
+    const rawDesc = sanitizeCoachDesc(coach.desc);
+    const improved = await improveCoachBio(rawDesc || coach.role, coach.name);
 
     const userId = ctx.chat?.id || 0;
     setState(userId, { stage: 'ai_preview_coach_desc_edit', coachId: coach.id, generatedText: improved });
@@ -721,8 +786,8 @@ bot.callbackQuery(/^coach_ai_imp_(.+)$/, async (ctx) => {
 
     await bot.api.deleteMessage(ctx.chat!.id, waitMsg.message_id).catch(() => {});
     await ctx.reply(
-      `✨ *Улучшенный вариант описания для ${coach.name}:*\n\n` +
-      `«${improved}»\n\n` +
+      `✨ *Улучшенный вариант описания для ${escapeMarkdown(coach.name)}:*\n\n` +
+      `«${escapeMarkdown(improved)}»\n\n` +
       `_Применить на сайте или попробовать еще раз?_`,
       { parse_mode: 'Markdown', reply_markup: kb }
     );
@@ -748,7 +813,7 @@ bot.callbackQuery(/^coach_ai_apply_(.+)$/, async (ctx) => {
   saveCoach(coach);
   clearState(userId);
 
-  await ctx.reply(`✅ Новое описание наставника *${coach.name}* сохранено и опубликовано на сайте!`, {
+  await ctx.reply(`✅ Новое описание наставника *${escapeMarkdown(coach.name)}* сохранено и опубликовано на сайте!`, {
     parse_mode: 'Markdown'
   });
   await sendCoachCard(ctx, coach, getCoachPostEditKeyboard(coach.id));
@@ -906,6 +971,21 @@ bot.callbackQuery('coach_skip_photo', async (ctx) => {
   }
 });
 
+bot.callbackQuery('coach_skip_desc', async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const userId = ctx.chat?.id || 0;
+  const state = getState(userId);
+  if (state.stage === 'coach_desc' || state.stage === 'ai_preview_coach_desc_wizard') {
+    state.draft.desc = 'Преподаватель спортивного бального танца ТСК «Авалон». Подробное резюме и расписание занятий уточняйте у администратора.';
+    setState(userId, { stage: 'coach_specs', draft: state.draft });
+    await ctx.reply(
+      `🏷️ *Шаг 6 из 6: Ключевые теги*\n\n` +
+      `Введите направления через запятую (например: *Начальная подготовка, Балет, Постановка пар, Прогоны*):`,
+      { parse_mode: 'Markdown', reply_markup: getCancelKeyboard('coach_list') }
+    );
+  }
+});
+
 // ==========================================
 // 2. SECTION: ANNOUNCEMENTS
 // ==========================================
@@ -928,11 +1008,10 @@ async function sendAnnouncementCard(ctx: any, ann: Announcement, customKb?: Inli
     .row()
     .text('🗑️ Удалить', `ann_del_${ann.id}`);
 
-
   const caption =
-    `📢 *${ann.title}*\n` +
-    `🏷️ Плашка: ${ann.tag} | 📅 Дата: ${ann.date}\n\n` +
-    `${ann.text}`;
+    `📢 *${escapeMarkdown(ann.title)}*\n` +
+    `🏷️ Плашка: ${escapeMarkdown(ann.tag)} | 📅 Дата: ${escapeMarkdown(ann.date)}\n\n` +
+    `${escapeMarkdown(ann.text)}`;
 
   if (ann.photo) {
     const photoSource = resolvePhotoSource(ann.photo);
@@ -948,10 +1027,18 @@ async function sendAnnouncementCard(ctx: any, ann: Announcement, customKb?: Inli
     }
   }
 
-  await ctx.reply(caption, {
-    parse_mode: 'Markdown',
-    reply_markup: kb
-  });
+  try {
+    await ctx.reply(caption, {
+      parse_mode: 'Markdown',
+      reply_markup: kb
+    });
+  } catch (errReply) {
+    console.error(`Failed to send ann text fallback for ${ann.title}:`, errReply);
+    await ctx.reply(
+      `📢 ${ann.title}\n🏷️ Плашка: ${ann.tag} | 📅 Дата: ${ann.date}\n\n${ann.text}`,
+      { reply_markup: kb }
+    );
+  }
 }
 
 bot.callbackQuery('ann_list', async (ctx) => {
@@ -973,7 +1060,11 @@ bot.callbackQuery('ann_list', async (ctx) => {
   });
 
   for (const ann of announcements) {
-    await sendAnnouncementCard(ctx, ann);
+    try {
+      await sendAnnouncementCard(ctx, ann);
+    } catch (err) {
+      console.error(`Error sending card for ann ${ann.id}:`, err);
+    }
   }
 
   const bottomKb = new InlineKeyboard()
@@ -1612,9 +1703,9 @@ async function sendGalleryCard(ctx: any, item: GalleryItem, customKb?: InlineKey
     .text('🗑️ Удалить', `gal_del_${item.id}`);
 
   const caption =
-    `📸 *${item.title}*\n` +
-    `🎗️ ${item.badge} | 📁 ${item.category || 'Галерея'}\n\n` +
-    `📝 ${item.caption}`;
+    `📸 *${escapeMarkdown(item.title)}*\n` +
+    `🎗️ ${escapeMarkdown(item.badge)} | 📁 ${escapeMarkdown(item.category || 'Галерея')}\n\n` +
+    `📝 ${escapeMarkdown(item.caption)}`;
 
   const photoSource = resolvePhotoSource(item.photo);
   try {
@@ -1625,10 +1716,18 @@ async function sendGalleryCard(ctx: any, item: GalleryItem, customKb?: InlineKey
     });
   } catch (err) {
     console.error(`Failed to send gallery photo for ${item.title}:`, err);
-    await ctx.reply(caption, {
-      parse_mode: 'Markdown',
-      reply_markup: kb
-    });
+    try {
+      await ctx.reply(caption, {
+        parse_mode: 'Markdown',
+        reply_markup: kb
+      });
+    } catch (errReply) {
+      console.error(`Failed to send gallery text fallback for ${item.title}:`, errReply);
+      await ctx.reply(
+        `📸 ${item.title}\n🎗️ ${item.badge} | 📁 ${item.category || 'Галерея'}\n\n📝 ${item.caption}`,
+        { reply_markup: kb }
+      );
+    }
   }
 }
 
@@ -1651,7 +1750,11 @@ bot.callbackQuery('gal_list', async (ctx) => {
   });
 
   for (const item of gallery) {
-    await sendGalleryCard(ctx, item);
+    try {
+      await sendGalleryCard(ctx, item);
+    } catch (err) {
+      console.error(`Error sending card for gallery item ${item.id}:`, err);
+    }
   }
 
   const bottomKb = new InlineKeyboard()
@@ -2435,10 +2538,10 @@ bot.on('message:text', async (ctx) => {
       return;
     }
 
-    if (state.field === 'name') coach.name = text;
-    else if (state.field === 'role') coach.role = text;
-    else if (state.field === 'badge') coach.badge = text;
-    else if (state.field === 'desc') coach.desc = text;
+    if (state.field === 'name') coach.name = text.trim();
+    else if (state.field === 'role') coach.role = text.trim();
+    else if (state.field === 'badge') coach.badge = text.trim();
+    else if (state.field === 'desc') coach.desc = sanitizeCoachDesc(text);
     else if (state.field === 'specs') {
       coach.specs = text.split(',').map(s => s.trim()).filter(Boolean);
     }
@@ -2446,7 +2549,7 @@ bot.on('message:text', async (ctx) => {
     saveCoach(coach);
     clearState(userId);
 
-    await ctx.reply(`✅ Данные наставника *${coach.name}* обновлены и сразу видны на сайте!`, {
+    await ctx.reply(`✅ Данные наставника *${escapeMarkdown(coach.name)}* обновлены и сразу видны на сайте!`, {
       parse_mode: 'Markdown'
     });
     await sendCoachCard(ctx, coach, getCoachPostEditKeyboard(coach.id));
@@ -2552,6 +2655,8 @@ bot.on('message:text', async (ctx) => {
     const descKb = new InlineKeyboard()
       .text('🪄 Сгенерировать через AI', 'coach_ai_gen_desc')
       .row()
+      .text('➡️ Без описания (пропустить)', 'coach_skip_desc')
+      .row()
       .text('❌ Отмена', 'coach_list')
       .text('🎛️ Главное меню', 'back_main');
 
@@ -2565,7 +2670,7 @@ bot.on('message:text', async (ctx) => {
   }
 
   if (state.stage === 'coach_desc' || state.stage === 'ai_preview_coach_desc_wizard') {
-    state.draft.desc = text;
+    state.draft.desc = sanitizeCoachDesc(text);
     setState(userId, { stage: 'coach_specs', draft: state.draft });
     await ctx.reply(
       `🏷️ *Шаг 6 из 6: Ключевые теги*\n\n` +
